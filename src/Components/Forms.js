@@ -1,16 +1,30 @@
-import React,{useState,useContext} from 'react'
-import { Link } from 'react-router-dom';
+import React,{useState,useContext,useEffect} from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import menu from '../Images/menu.png'
 import close from '../Images/close.png'
  import iqralogo from '../Images/iqralogo.png'
 import { ContractContext } from '../ContextApi/ContractContext';
 function Forms(){
-  
+  const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
   const {contract} = useContext(ContractContext);
+const {userAddress} = useContext(ContractContext)
+const [address,setAddress]=useState('')
+const {Adminaddress} = useContext(ContractContext)
+
+console.log("kakakaka",Adminaddress)
+
+const handleNavigation = () => {
+  if (userAddress == Adminaddress) {
+    navigate('/ViewAdmin');
+  } else {
+    console.log('Condition is false. Not navigating.');
+  }
+};
 
 
-                    // Applicaant Data
+
+// Applicaant Data
 
 
  const [formData, setFormObj] =useState({
@@ -23,7 +37,6 @@ function Forms(){
     email:"",
     _address:""
 });
-
 const handleInputChange = (e) => {
   setFormObj({...formData, [e.target.name]: e.target.value })    
 }
@@ -115,6 +128,10 @@ const QualifFormbtn = async () => {
   }
   }
 
+
+ 
+
+
   return (
     <section className='w-full max-h-screen'  >
 
@@ -125,7 +142,7 @@ const QualifFormbtn = async () => {
       <ul className=" font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 ">
         <li className=" text-xl font-bold block py-2 px-3 text-white  rounded md:bg-transparent md:text-gray-900 md:p-0  dark:text-white md:hover:text-blue-500" aria-current="page"><Link to="/Forms">Home</Link></li>
         <li className=" text-xl font-bold block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"><Link to="/View">View</Link></li>
-        <li className=" text-xl font-bold block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"><Link to="/ViewAdmin">View As Admin</Link></li>
+        <li className=" text-xl font-bold block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent" onClick={handleNavigation}>View As Admin</li>
       </ul>
     </div>
 <div className='sm:hidden flex flex-1 justify-end items-center'>

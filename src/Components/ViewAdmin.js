@@ -1,4 +1,5 @@
-import React,{useState} from 'react'
+import { ContractContext } from '../ContextApi/ContractContext'; 
+import {useState,useContext, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import iqralogo from '../Images/iqralogo.png'
@@ -10,10 +11,51 @@ function ViewAdmin() {
   const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
   const [open, setOpen] = useState(false);
- 
   const handleOpen = () => setOpen(!open);
- 
   const navigat=()=>{ navigate("/Viewdata")}
+  const [applicantData, setApplicantData] = useState([]);
+  const [academicData, setAcademicData] = useState([]);
+  // const [courseData, setCourseData] = useState([]);
+  // const [admissionData, setAdmissionData] = useState([]);
+
+
+  const { contract } = useContext(ContractContext);
+
+  const readData = async () => {
+    try {
+      const [applicant, academic, course, admission] = await contract.getAllApplications();
+
+     setApplicantData(processData(applicant));
+      setAcademicData(processData(academic));
+      // setCourseData(processData(course));
+      // setAdmissionData(processData(admission));
+    } catch (error) {
+      console.error('Error reading data:', error);
+    }
+  };
+
+  const processData = (data) => {
+    return data.map((item) => {
+      const values = Object.entries(item).map(([key, value]) => [key, value]);
+      return Object.fromEntries(values);
+    });
+  };
+
+  useEffect(() => {
+    readData();
+  }, []);
+
+  console.log('Applicant Data:', applicantData);
+  console.log('Academic Data:', academicData);
+  // console.log('Course Data:', courseData);
+  // console.log('Admission Data:', admissionData);
+  useEffect(() => {
+   
+  }, [applicantData, academicData]);
+
+ 
+
+
   return (
     <div>
             
@@ -64,12 +106,27 @@ my-2 min-w[140px] rounded-xl slidebar`}>
         </th>
         <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
           <p className="block font-sans text-xl  font-bold leading-none text-black ">
-            Date
+            Contact Number
           </p>
         </th>
         <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
           <p className="block font-sans text-xl  font-bold leading-none text-black ">
-            Action
+            Date of Birth
+          </p>
+        </th>
+        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+          <p className="block font-sans text-xl  font-bold leading-none text-black ">
+            Email
+          </p>
+        </th>
+        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+          <p className="block font-sans text-xl  font-bold leading-none text-black ">
+            Degree
+          </p>
+        </th>
+        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+          <p className="block font-sans text-xl  font-bold leading-none text-black ">
+            Institute Name
           </p>
         </th>
         <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -80,139 +137,62 @@ my-2 min-w[140px] rounded-xl slidebar`}>
        
       </tr>
     </thead>
+  
     <tbody className='shadow-2xl'>
-      <tr className="even:bg-blue-gray-50/50">
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            John Michael
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Manager
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Manager
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            23/04/18
-          </p>
-        </td>
-        <td className="p-4 flex gap-5">
-        <button className="select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">View</button>
-        <button className="select-none rounded-lg bg-green-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">Change Status</button>
-        </td>
-      </tr>
-      <tr className="even:bg-blue-gray-50/50">
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Alexa Liras
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Developer
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Manager
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            23/04/18
-          </p>
-        </td>
+    { 
+      applicantData.map((ele)=>{
+        return(
+
         
-        <td className="p-4 flex gap-5">
-        <button className="select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">View</button>
-        <button className="select-none rounded-lg bg-green-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">Change Status</button>
-        </td>
-      </tr>
       <tr className="even:bg-blue-gray-50/50">
         <td className="p-4">
           <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Laurent Perrier
+            {ele[0]}
           </p>
         </td>
         <td className="p-4">
           <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Executive
+            {ele[1]}
           </p>
         </td>
         <td className="p-4">
           <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Manager
+            {ele[4]}
           </p>
         </td>
         <td className="p-4">
           <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            19/09/17
-          </p>
-        </td>
-        <td className="p-4 flex gap-5">
-        <button className="select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">View</button>
-        <button className="select-none rounded-lg bg-green-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">Change Status</button>
-        </td>
-      </tr>
-      <tr className="even:bg-blue-gray-50/50">
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Michael Levi
+          {parseInt(ele[2])}
           </p>
         </td>
         <td className="p-4">
           <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Developer
+            {ele[5]}
           </p>
         </td>
         <td className="p-4">
           <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Manager
+            BSCS
           </p>
         </td>
         <td className="p-4">
           <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            24/12/08
-          </p>
-        </td>
-        <td className="p-4 flex gap-5">
-        <button className="select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">View</button>
-        <button className="select-none rounded-lg bg-green-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">Change Status</button>
-        </td>
-      </tr>
-      <tr className="even:bg-blue-gray-50/50">
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Richard Gran
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Manager
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Manager
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            04/10/21
+            Arid university
           </p>
         </td>
         <td className="p-4 flex gap-5">
         <button className="select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button" onClick={navigat}>View</button>
         <button className="select-none rounded-lg bg-green-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button"
-        onClick={handleOpen} variant="gradient"
-        >Change Status</button>
-              <Dialog open={open} handler={handleOpen} className='bg-gray-300 '>
+        onClick={handleOpen} variant="gradient">Change Status</button>
+        </td>
+     </tr>
+     )
+      })
+    }
+ 
+    </tbody>
+   
+    <Dialog open={open} handler={handleOpen} className='bg-gray-300 '>
         <DialogHeader>Admin Approval</DialogHeader>
         <DialogBody>
         <div className='flex flex-row '>
@@ -223,8 +203,8 @@ my-2 min-w[140px] rounded-xl slidebar`}>
         </ul>
         <div className="w-52 ml-[250px] ">
       <Select label="Select Version"  >
-        <Option className='font-bold text-xl text-black'>Approved</Option>
-        <Option className='font-bold text-xl text-black'>Rejected</Option>
+        <Option className='font-bold text-xl text-black' value='true'>Approved</Option>
+        <Option className='font-bold text-xl text-black' value='false'>Rejected</Option>
       </Select>
     </div>
     </div>
@@ -239,20 +219,8 @@ my-2 min-w[140px] rounded-xl slidebar`}>
         </DialogFooter>
       </Dialog>
 
-
-
-
-        </td>
-      </tr>
-    </tbody>
   </table>
   
-  
-
-
-
-
-
 </div>
 
 
